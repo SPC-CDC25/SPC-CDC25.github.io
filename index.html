@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop on Stochastic Planning & Control</title>
+    <style>
+        /* Import a clean, modern font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Basic body styling for centering and background color */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        .main-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Main heading style */
+        .main-title-container {
+            text-align: center;
+            padding-top: 20px;
+            margin-bottom: 20px;
+        }
+        .main-title-container h1 {
+            color: #1f2937;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .main-title-container .subtitle {
+            color: #4b5563;
+            font-size: 1rem;
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+        .subtitle-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subtitle-item svg {
+            width: 16px;
+            height: 16px;
+            color: #6b7280;
+            flex-shrink: 0;
+        }
+        .subtitle-link {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .subtitle-link:hover {
+            text-decoration: underline;
+        }
+
+
+        /* Navigation Menu Styles */
+        .main-nav {
+            width: 100%;
+            padding: 10px 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            border-bottom: 1px solid #d1d5db;
+            margin-bottom: 30px;
+        }
+        .main-nav a {
+            color: #0c2f68;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+        .main-nav a:hover {
+            color: #3b82f6;
+        }
+
+        /* Updates Section */
+        .updates-section {
+            margin-bottom: 30px;
+        }
+        .update-item {
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease;
+        }
+         .update-item.is-open {
+            background-color: #f9fafb;
+        }
+        .update-header {
+            padding: 12px 20px; /* Reduced padding */
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .update-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1; /* Allow title to take up space */
+        }
+        .update-header h3 {
+            margin: 0;
+            font-size: 0.9rem; /* Reduced font size */
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .update-header .date {
+            font-size: 0.8rem; /* Reduced font size */
+            color: #6b7280;
+            margin-left: 16px;
+            flex-shrink: 0;
+        }
+        .update-header .icon {
+            transition: transform 0.3s ease;
+            color: #6b7280;
+            margin-left: 16px;
+        }
+        .update-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding 0.4s ease;
+            padding: 0 20px;
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .update-item.is-open .update-content {
+            max-height: 800px; /* Large enough for content */
+            padding: 15px 20px; /* Reduced padding */
+        }
+         .update-item:not(.is-open) .update-content {
+            border-top: none;
+        }
+        .update-item.is-open .update-header .icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Seamless Register Button */
+        .register-link-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+         .register-link-container.sub-link {
+            margin-bottom: 40px;
+        }
+        .register-link {
+            color: #3b82f6;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+         .register-link.sub-link {
+            font-size: 1rem;
+        }
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+
+        .section-title {
+            color: #0c2f68;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Container to hold all the schedule items */
+        .schedule-container {
+            width: 100%;
+        }
+        
+        .schedule-category {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #4b5563;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
+        }
+
+        .schedule-category:first-of-type {
+            margin-top: 0;
+        }
+
+        /* The main container for each schedule item */
+        .schedule-item {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 24px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 6px solid;
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+        }
+        .schedule-item:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        .item-green { border-left-color: #34d399; }
+        .item-blue { border-left-color: #3b82f6; }
+        .item-yellow { border-left-color: #fbbf24; }
+
+        /* Time details styles */
+        .time-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            margin-right: 30px;
+            flex-shrink: 0;
+            width: 150px;
+            text-align: center;
+            gap: 8px; /* Added gap for spacing */
+        }
+        .time-details .time {
+            font-weight: 600;
+            color: #374151;
+            font-size: 1rem;
+            margin: 0;
+            white-space: nowrap;
+        }
+        .time-details .duration {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 0; /* Removed margin */
+        }
+
+        /* Workshop content styles */
+        .workshop-content { flex-grow: 1; }
+        .workshop-header {
+            margin-bottom: 16px;
+        }
+        .workshop-header h3 {
+            margin: 0;
+            font-size: 1.1rem; /* Reduced font size */
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .organizers-pills {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-top: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .organizers-pills span {
+            background-color: #eef2ff;
+            color: #4338ca;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 16px;
+        }
+
+        /* Toggle controls for abstract/slides */
+        .toggle-controls {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-bottom: 8px;
+        }
+        .toggle-btn, .link-btn {
+            background-color: transparent;
+            color: #3b82f6;
+            border: none;
+            padding: 4px 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-btn:hover, .link-btn:hover { text-decoration: underline; }
+        .toggle-btn svg { transition: transform 0.3s ease-in-out; }
+        .toggle-btn.is-active svg { transform: rotate(180deg); }
+
+        /* Collapsible content container */
+        .content-container {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+            padding: 0;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out, margin-top 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+        .content-container.is-open {
+            max-height: 800px;
+            opacity: 1;
+            margin-top: 10px;
+            padding: 16px;
+        }
+        .content-container h4 {
+            margin: 0 0 8px 0;
+            color: #111827;
+            font-weight: 600;
+        }
+        .content-container p {
+            margin: 0;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+        
+        /* New Speaker/Organizer List Styles */
+        .person-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .person-list-item {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .person-list-item:hover {
+             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+             transform: translateY(-2px);
+        }
+        .person-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 20px;
+            cursor: pointer;
+        }
+        .person-list-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .person-header-text {
+            flex-grow: 1;
+        }
+        .person-name-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .person-header .name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+        .person-header .affiliation {
+            font-size: 1rem;
+            color: #4b5563;
+            margin: 4px 0 8px 0;
+        }
+         .inline-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 16px; /* Space between links */
+        }
+        .bio-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #3b82f6;
+            font-size: 0.9rem;
+        }
+        .bio-toggle .icon {
+            transition: transform 0.3s ease;
+        }
+        .person-list-item.is-open .bio-toggle .icon {
+             transform: rotate(180deg);
+        }
+
+        .person-bio-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding 0.4s ease;
+            padding: 0 20px;
+        }
+        .person-list-item.is-open .person-bio-content {
+            max-height: 900px;
+            padding: 0 20px 20px;
+        }
+        .person-bio-content .bio {
+            font-size: 0.95rem;
+            color: #374151;
+            line-height: 1.6;
+            margin: 0;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .person-bio-content h4 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+            color: #111827;
+        }
+
+
+        /* About & Motivation & Outreach Section */
+        .text-section {
+            margin-top: 40px;
+        }
+        .text-section p {
+            margin: 0;
+            line-height: 1.7;
+            color: #374151;
+        }
+        .text-section p:not(:last-child) {
+            margin-bottom: 1em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-title-container h1 { font-size: 1.75rem; }
+            .schedule-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .person-header {
+                flex-direction: column;
+                align-items: center; /* Center items on mobile */
+            }
+            .person-header-text {
+                text-align: center; /* Center text on mobile */
+            }
+            .person-name-line, .inline-links {
+                justify-content: center; /* Center name and links */
+                display: flex;
+                width: 100%;
+            }
+            .time-details {
+                flex-direction: column;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 16px;
+                align-items: center;
+            }
+            .workshop-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .organizers-pills {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+            .toggle-controls {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="main-title-container">
+            <img src="images/large_Logo_CDC_2025_3e6db1dc79.png" alt="CDC25 Logo" style="max-width: 350px;">
+            <h1>Workshop on Stochastic Planning & Control of Dynamical Systems</h1>
+            <div class="subtitle">
+                <span class="subtitle-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+                    <span>December 9, 2025</span>
+                </span>
+                <span class="subtitle-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/><path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2.5A1.5 1.5 0 0 1 4.5 1H5V.5a.5.5 0 0 1 .172-.378l.828-.828a.5.5 0 0 1 .707 0l.636.636a.5.5 0 0 1 .707 0l.636-.636a.5.5 0 0 1 .707 0l.829.828zm-1.414 1.414L8.172 2.793a.5.5 0 0 1-.707 0L6.225 1.562a.5.5 0 0 1 .707-.707L8.5 2.44l.828-.828a.5.5 0 0 1 .707.707zM12 15V2.5a.5.5 0 0 0-.5-.5H4.5a.5.5 0 0 0-.5.5V15h8z"/></svg>
+                    <span>Room TBD</span>
+                </span>
+                <span class="subtitle-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    <span><a href="http://cdc2025.ieeecss.org" target="_blank" rel="noopener noreferrer" class="subtitle-link">CDC 2025</a>, Rio de Janeiro, Brazil</span>
+                </span>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="#motivation">Motivation and Objectives</a>
+            <a href="#speakers">Speakers</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#organizers">Organizers</a>
+            <a href="#outreach">Outreach</a>
+            <a href="#code">Code</a>
+        </nav>
+
+        <div class="register-link-container">
+            <a href="https://cdc2025.ieeecss.org/program/workshops" class="register-link">Register for the Workshop &rarr;</a>
+        </div>
+        <div class="register-link-container sub-link">
+            <a href="#" class="register-link sub-link">Sign up for Ph.D. Lightning Rounds &rarr;</a>
+        </div>
+
+        <!-- Updates Section -->
+        <div class="updates-section">
+            <h4>Workshop Updates:</h4>
+            <div class="update-item is-open">
+                <div class="update-header">
+                    
+                    <div class="update-title">
+                        <h3>Ph.D. Lightning Rounds Sign Up Is Now Live!</h3>
+                    </div>
+                     <span class="date">July 26, 2025</span>
+                     <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                </div>
+                <div class="update-content">
+                    <p>Are you a Ph.D. student? Sign up for the Ph.D. Lightning Rounds! 
+                        Do take a look at Motivations and Objectives to learn more about the workshop's focus. <strong>Sign up 
+                        link is right above!</strong></p>
+                </div>
+            </div>
+            <div class="update-item">
+                <div class="update-header">
+                    <div class="update-title">
+                        <h3>Website Launch</h3>
+                    </div>
+                    <span class="date">July 25, 2025</span>
+                     <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                </div>
+                <div class="update-content">
+                    <p>Welcome to the official website for the Workshop on Stochastic Planning & Control of Dynamical Systems. Please check back for updates on speakers, schedule, and registration.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Motivation and Objectives Section -->
+        <div id="motivation">
+             <h2 class="section-title" style="margin-top: 0;">Motivation and Objectives</h2>
+             <p style="line-height: 1.6;">Recent advances in stochastic control theory have opened new avenues for addressing uncertainty in
+        complex dynamical systems. This workshop brings together leading, early, and student researchers in
+        stochastic control, uncertainty quantification, and optimization to explore cutting-edge methodologies
+        for planning and controlling systems under uncertainty. The intersection of these disciplines offers
+        a fertile ground for developing practical algorithms that can handle the challenges of real-world
+        applications, particularly in the domains of aerospace and autonomous systems. This full-day
+        workshop will expose researchers to the broad and varied ideas of planning and control under
+        (stochastic) uncertainty, with a suite of different approaches and methodologies to enable safe and
+        robust control and trajectory optimization. It will enable interaction between researchers working
+        on different aspects of stochastic control, with the aims of:
+        <ul style="line-height: 1.6;">
+            <li>Developing a deeper understanding of the fundamental ties between these related research topics.</li>
+            <li>Leveraging this understanding to design optimal control algorithms able to handle uncertainty in nonlinear, potentially non-stationary, and stochastic environments.</li>
+        </ul>
+        </p>
+        <p> The workshop will focus around the following four key research areas:</p>
+        
+                        
+            <div class="updates-section" style="margin-top: 20px; margin-bottom: 0;">
+                <div class="update-item">
+                    <div class="update-header">
+                        <div class="update-title">
+                            <h3>Stochastic Model Predictive and Data Driven Control</h3>
+                        </div>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                    <div class="update-content">
+                        <p>Such approaches comprise methods that explicitly incorporate constraints and the risk management planning into trajectory optimization. Here, uncertainty is handled within a receding horizon framework.
+                        It typically involves solving optimization problems online where both the objective and
+                        constraints reformulated probabilistically. Theoretical studies focus on ensuring stability
+                        and feasibility under uncertainty using techniques form convex and stochastic optimization.
+                        Additionally, approaches are classified into traditional model-based and data-driven approaches,
+                        where the latter is a nascent but growing field that synthesizes control laws directly from
+                        (noisy) data collected from the underlying system.Approaches vary in the treatment of the data towards control. For example,
+                        the behavioral approach utilizes trajectory data to represent the system, with which one can
+                        develop a controller without identification. </p>
+                    </div>
+                </div>
+                <div class="update-item">
+                    <div class="update-header">
+                        <div class="update-title">
+                            <h3>Distributional Control</h3>
+                        </div>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                    <div class="update-content">
+                        <p>Distributional control comprises methods aimed at controlling or steering probability distributions and handling
+                        model uncertainty via distributional methods. For example, optimal transport theory provides tools for quantifying distances between
+                        probability measures. This topic covers methods the theoretical insights with which the
+                        control design can steer a system from one distribution to the next or even robustified against
+                        uncertainty in the underlying probability distributions.Simiarly, density steering is concerned with shaping the full probability distribution of a
+                        system’s state rather than focusing solely on its mean evolution. It encompasses techniques
+                        such as covariance steering, which directly manipulates the state covariance using simultaneous
+                        open-loop and feedback control. The problems in this area have deep connections with the
+                        theory of optimal transport and Schrodinger bridges, which provides a fruitful cross between
+                        pure mathematics and optimal control theory.</p>
+                    </div>
+                </div>
+                <div class="update-item">
+                    <div class="update-header">
+                        <div class="update-title">
+                            <h3>Stochastic Safety and Probabilistic Guarantees</h3>
+                        </div>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                    <div class="update-content">
+                        <p>Stochastic Safety comprises methods for ensuring system safety via safety filters and optimal control, and verifying
+                        reachability under stochastic disturbances. For example, stochastic reachbility his area deals with computing the probability that a stochastic
+                        system reaches (or avoids) particular sets. Its mathematical foundations typically involve
+                        solving a Hamilton-Jacob-Bellman (HJB) PDE or purely a dynamic programming problem to
+                        handle generalized stochasticity. Its application includes a myriad of settings, including but
+                        not limited to constructing control laws and safety filters. On the other hand, stochastic barriers extend the concept of a deterministic barrier
+                        function - which guarantees system safety by ensuring the underlying safe set is forward
+                        invariant - to the stochastic setting. The ultimate goal of stochastic barriers as either a control
+                        law or safety filter is to ensure system safety with high probability.</p>
+                    </div>
+                </div>
+                <div class="update-item">
+                    <div class="update-header">
+                        <div class="update-title">
+                            <h3>Applications in Aerospace</h3>
+                        </div>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                    <div class="update-content">
+                        <p>This track is dedicated to practically relevant algorithms which exploit
+                        and develop theoretical insights to be amenable for practical applications. It brings together
+                        methods from the previous tracks, opens the discussion applications where handling stochasticity would be crucial, and realizes their effectiveness on real-world problems. Areas include examples from aerospace, a core motivation for this workshop, such as low-
+                        thrust cislunar and interplanetary guidance, turbulence-affected quadrotor trajectory
+                        optimization, and precision rocket landing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Speakers Section -->
+        <h2 class="section-title" id="speakers">Speakers</h2>
+        <div class="person-list">
+            <!-- Speaker 1 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/alessandro_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Alessandro Abate</h3>
+                        </div>
+                        <p class="affiliation">Professor, Computer Science, University of Oxford</p>
+                        <div class="inline-links">
+                            <a href="https://www.cs.ox.ac.uk/people/alessandro.abate/home.html" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Professor Alessandro Abate is Professor of Verification and Control in the Department of Computer Science 
+                        at the University of Oxford, a Fellow and Tutor at St. Hugh’s College, and a Faculty Fellow at the Alan Turing Institute
+                         in London.Born in Milan in 1978 and raised in Padua, he earned a Laurea degree in Electrical Engineering (summa cum 
+                         laude) from the University of Padua in 2002, after spending periods of study at UC Berkeley and RWTH Aachen. He went 
+                         on to complete an M.S. (2004) and a Ph.D. (2007) in Electrical Engineering and Computer Sciences at UC Berkeley, where 
+                         he worked on Systems and Control Theory under Shankar Sastry. While at Berkeley, he also served as an International 
+                         Fellow in the Computer Science Laboratory at SRI International in Menlo Park, California. After finishing 
+                         his doctorate, he joined Stanford University’s Department of Aeronautics and Astronautics as a post-doctoral researcher,
+                          collaborating with Claire Tomlin on systems biology in affiliation with the Stanford School of Medicine. From June 2009
+                           to mid-2013 he was an Assistant Professor at the Delft Center for Systems and Control, TU Delft, where he led a research 
+                           group focused on the verification and control of complex systems. His research interests center on the analysis, formal 
+                           verification, and control of heterogeneous and complex dynamical models—particularly stochastic hybrid systems—and their 
+                           applications to cyber-physical systems, with an emphasis on safety-critical domains, energy systems, and biological networks.</p>
+                </div>
+            </div>
+            <!-- Speaker 2 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/behcet_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Behçet Açıkmeşe</h3>
+                        </div>
+                        <p class="affiliation">Professor, Aeronautics & Astronautics, University of Washington</p>
+                        <div class="inline-links">
+                            <a href="https://www.aa.washington.edu/facultyfinder/behcet-acikmese" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Dr. Açıkmeşe received his M.S. in mechanical engineering and his Ph.D. in aerospace
+                        engineering from Purdue University.
+                        He was a technologist and a senior member of the Guidance and Control (G&C) Analysis Group
+                        at NASA Jet Propulsion Laboratory (JPL) from 2003 to 2012 and was a visiting Assistant Professor
+                        of Aerospace Engineering at Purdue University before joining JPL.
+                        At JPL, he developed guidance, control, and estimation algorithms for formation-flying spacecraft
+                        and distributed networked systems, proximity operations around asteroids and comets, and planetary
+                        landing, as well as developing interior point methods algorithms for the real-time solution of convex
+                        optimization problems. Dr. Açıkmeşe’s research developed a fundamental result, known as “lossless
+                        convexification”, that provides the solution of a general class of nonconvex optimal control problems
+                        via computationally tractable convex optimization methods. This theoretical insight led to a leap in
+                        the G&C technology that now made planetary pinpoint landing feasible. NASA has been investing
+                        on the demonstration of this technology to mature it for next generation missions to Mars and other
+                        planets.
+                        Dr. Açıkmeşe also worked on NASA missions. He was a member of NASA’s Mars Science
+                        Laboratory (MSL) G&C team, where he developed and delivered G&C algorithms used in the
+                        "fly-away phase" of the successful Curiosity rover landing in August 2012. He also developed Reaction
+                        Control System (RCS) algorithms for NASA’s SMAP (Soil Moisture Active Passive) mission, which
+                         launched in 2014.</p>
+                </div>
+            </div>
+            <!-- Speaker 3 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/francesco_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Francesco Borrelli</h3>
+                        </div>
+                        <p class="affiliation">Professor, Mechanical Engineering, UC Berkeley</p>
+                        <div class="inline-links">
+                            <a href="https://me.berkeley.edu/people/francesco-borrelli/" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Francesco Borrelli received the ‘Laurea’ degree in computer science engineering in 1998 from
+                        the University of Naples ‘Federico II’, Italy. In 2002 he received the PhD from the Automatic
+                        Control Laboratory at ETH-Zurich, Switzerland. He is currently a Professor at the Department
+                        of Mechanical Engineering of the University of California at Berkeley, USA. He is the author of
+                        more than one hundred fifty publications in the field of predictive control. He is author of the book
+                        Predictive Control published by Cambridge University Press, the winner of the 2009 NSF CAREER
+                        Award and the winner of the 2012 IEEE Control System Technology Award. In 2016 he was elected
+                        IEEE fellow. In 2017 he was awarded the Industrial Achievement Award by the International
+                        Federation of Automatic Control (IFAC) Council. Since 2004 he has served as a consultant for
+                        major international corporations. He was the founder and CTO of BrightBox Technologies Inc,
+                        a company focused on cloud-computing optimization for autonomous systems, acquired by Flex,
+                        Inc. in 2016. He was the co-director of the Hyundai Center of Excellence in Integrated Vehicle
+                        Safety Systems and Control at UC Berkeley. He is the co-founder of WideSense, Inc. a UC Berkeley
+                        spinoff focused on Mobility Contextual Intelligence. His research interests are in the area of model
+                        predictive control and its application to automated driving, robotics, food and energy systems.</p>
+                </div>
+            </div>
+            <!-- Speaker 4 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/yongxin_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Yongxin Chen</h3>
+                        </div>
+                        <p class="affiliation">Associate Professor, Aerospace Engineering, Georgia Tech</p>
+                        <div class="inline-links">
+                            <a href="https://yongxin.ae.gatech.edu" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Yongxin Chen was born in Ganzhou, Jiangxi, China. He received his BSc in Mechanical Engineering from Shanghai Jiao 
+                        Tong university, China, in 2011, and a Ph.D. degree in Mechanical Engineering, under the supervision of Tryphon Georgiou, 
+                        from University of Minnesota in 2016. He is currently an Associate Professor in the School of Aerospace Engineering at 
+                        Georgia Institute of Technology. Before joining Georgia Tech, he had a one-year Research Fellowship in the Department of 
+                        Medical Physics at Memorial Sloan Kettering Cancer Center with Allen Tannenbaum from 2016 to 2017 and was an Assistant 
+                        Professor in the Department of Electrical and Computer Engineering at Iowa State University from 2017 to 2018. He received 
+                        the George S. Axelby Best Paper Award (IEEE Transaction on Automatic Control) in 2017 for his joint work ‘‘Optimal steering 
+                        of a linear stochastic system to a final probability distribution, Part I’’ with Tryphon Georgiou and Michele Pavon and the 
+                        SIAM Journal on Control and Optimization Best Paper Award in 2023. He received the NSF CAREER Award in 2020, the 
+                        Simons-Berkeley research fellowship in 2021, the A.V. ‘Bal’ Balakrishnan Award in 2021, and the Donald P. Eckman Award in 2022. 
+                        He delivered plenary talks at the 2023 American Control Conference and the 2024 International Symposium on Mathematical Theory 
+                        of Networks and Systems.</p>
+                </div>
+            </div>
+            <!-- Speaker 5 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/florian_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Florian Dörfler</h3>
+                        </div>
+                        <p class="affiliation">Full Professor, Automatic Control Laboratory, ETH Zürich</p>
+                        <div class="inline-links">
+                            <a href="https://dorfler.ethz.ch" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Florian Dörfler is a Professor at the Automatic Control Laboratory at ETH Zürich. He
+                    received his Ph.D. degree in Mechanical Engineering from the University of California at Santa
+                    Barbara in 2013, and a Diplom degree in Engineering Cybernetics from the University of Stuttgart
+                    in 2008. From 2013 to 2014 he was an Assistant Professor at the University of California Los
+                    Angeles. He has been serving as the Associate Head of the ETH Zürich Department of Information
+                    Technology and Electrical Engineering from 2021 until 2022. His research interests are centered
+                    around automatic control, system theory, optimization, and learning. His particular foci are on
+                    network systems, data-driven settings, and applications to power systems. He is a recipient of the
+                    distinguished young research awards by IFAC (Manfred Thoma Medal 2020) and EUCA (European
+                    Control Award 2020). He and his team received best paper distinctions in the top venues of control,
+                    machine learning, power systems, power electronics, circuits and systems. They were recipients of
+                    the 2011 O. Hugo Schuck Best Paper Award, the 2012-2014 Automatica Best Paper Award, the
+                    2016 IEEE Circuits and Systems Guillemin-Cauer Best Paper Award, the 2022 IEEE Transactions
+                    on Power Electronics Prize Paper Award, the 2024 Control Systems Magazine Outstanding Paper
+                    Award, and multiple Best PhD thesis awards at UC Santa Barbara and ETH Zürich. They were
+                    further winners or finalists for Best Student Paper awards at the European Control Conference
+                    (2013, 2019), the American Control Conference (2010, 2016, 2024), the Conference on Decision
+                    and Control (2020), the PES General Meeting (2020), the PES PowerTech Conference (2017), the
+                    International Conference on Intelligent Transportation Systems (2021), the IEEE CSS Swiss Chapter
+                    Young Author Best Journal Paper Award (2022,2024), the IFAC Conferences on Nonlinear Model
+                    Predictive Control (2024) and Cyber-Physical-Human Systems (2024), and NeurIPS Oral (2024).
+                    He is currently serving on the council of the European Control Association and as a senior editor of
+                    Automatica.</p>
+                </div>
+            </div>
+            <!-- Speaker 6 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/gianni_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Giancarlo Ferrari-Trecate</h3>
+                        </div>
+                        <p class="affiliation">Professor, Mechanical Engineering, EPFL</p>
+                        <div class="inline-links">
+                            <a href="https://people.epfl.ch/giancarlo.ferraritrecate" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Giancarlo Ferrari-Trecate received the Ph.D. degree in Electronic and Computer Engineering
+                    from the Università degli Studi di Pavia in 1999. Since September 2016 he is Professor at EPFL,
+                    Lausanne, Switzerland. In spring 1998, he was a Visiting Researcher at the Neural Computing
+                    Research Group, University of Birmingham, UK. In fall 1998, he joined as a Postdoctoral Fellow
+                    the Automatic Control Laboratory, ETH, Zurich, Switzerland. He was appointed Oberassistent
+                    at ETH, in 2000. In 2002, he joined INRIA, Rocquencourt, France, as a Research Fellow. From
+                    March to October 2005, he was researcher at the Politecnico di Milano, Italy. From 2005 to August
+                    2016, he was Associate Professor at the Dipartimento di Ingegneria Industriale e dell’Informazione
+                    of the Università degli Studi di Pavia. His research interests include scalable control, microgrids,
+                    networked control systems, hybrid systems and machine learning. Giancarlo Ferrari Trecate was the recipient of the Researcher Mobility Grant from the Italian
+                    Ministry of Education, University and Research in 2005. He is currently a member of the IFAC
+                    Technical Committees on Control Design and Optimal Control, and the Technical Committee on
+                    Systems Biology of the IEEE SMC society. He has been serving on the editorial board of Automatica
+                    for nine years and of Nonlinear Analysis: Hybrid Systems.</p>
+                </div>
+            </div>
+            <!-- Speaker 7 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/tryphon_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Tryphon Georgiou</h3>
+                        </div>
+                        <p class="affiliation">UCI Distinguished Professor, Mechanical and Aero Engineering, UC Irvine</p>
+                        <div class="inline-links">
+                            <a href="https://georgiou.eng.uci.edu" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Tryphon T. Georgiou is a UCI Distinguished Professor in Mechanical and Aerospace Engineering
+                    at the University of California, Irvine. He studied at the National Technical University of Athens,
+                    Greece (Diploma in Mechanical and Electrical Engineering, 1979), and the University of Florida,
+                    Gainesville (PhD 1983). Prior to joining the University of California, Irvine, he served on the
+                    faculty at the University of Minnesota, Iowa State University, and Florida Atlantic University. Dr.
+                    Georgiou has received the George S. Axelby Outstanding Paper Award of the IEEE Control Systems
+                    Society for the years 1992, 1999, 2003, and 2017, he is a Fellow of the Institute of Electrical and
+                    Electronic Engineers (IEEE), a Fellow of the International Federation of Automatic Control (IFAC),
+                    and a Foreign Member of the Royal Swedish Academy of Engineering Sciences (IVA).</p>
+                </div>
+            </div>
+            <!-- Speaker 8 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/ken_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Kenshiro Oguri</h3>
+                        </div>
+                        <p class="affiliation">Assistant Professor, School of Aero and Astro, Purdue University</p>
+                        <div class="inline-links">
+                            <a href="https://engineering.purdue.edu/AAE/people/ptProfile?resource_id=255154" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Prof. Oguri’s research interest lies at the intersection of astrodynamics, control, optimization,
+                    nonlinear dynamics, and stochastic systems. His research develops mathematical and computational
+                    frameworks that address scientific and engineering challenges in space exploration, through advancing
+                    the state-of-the-art in space mission design, space trajectory optimization, spacecraft guidance,
+                    navigation, and control (GNC), and space autonomy. In particular, his Ph.D. research was focused
+                    on developing robust space mission design methods by combining astrodynamics, optimal control,
+                    stochastic optimal control, and numerical optimization to advance the technologies for autonomous
+                    spacecraft GNC and designing robust space trajectories under uncertainty. He also leverages his
+                    flight project experience as a mission designer at NASA JPL and JAXA to blend theory and
+                    practice, to identify and address critical challenges in real-world applications, and to contribute to
+                    the forefront of space exploration.</p>
+                </div>
+            </div>
+            <!-- Speaker 9 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/panos_headshot.png" alt="Photo of Speaker">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Panagiotis Tsiotras</h3>
+                        </div>
+                        <p class="affiliation">Professor, Aerospace Engineering, Georgia Tech</p>
+                        <div class="inline-links">
+                            <a href="https://dcsl.gatech.edu/tsiotras.html" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                    <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Dr. Tsiotras holds the David & Andrew Lewis Endowed Chair in the Daniel Guggenheim
+                    School of Aerospace Engineering at Georgia Tech. He is also associate director at the Institute for
+                    Robotics and Intelligent Machines. His current research interests include nonlinear and optimal
+                    control and their connections with AI, planning, and decision-making, emphasizing autonomous
+                    ground, aerial, and space vehicles applications. He has published more than 350 journal and
+                    conference articles in these areas. Prior to joining the faculty at Georgia Tech, Dr. Tsiotras was
+                    an assistant professor of mechanical and aerospace engineering at the University of Virginia. He
+                    has also held visiting appointments with the MIT, JPL, INRIA, Rocquencourt, the Laboratoire de
+                    Automatique de Grenoble, and the Ecole des Mines de Paris (Mines ParisTech). Dr. Tsiotras is a
+                    recipient of the NSF CAREER award, the IEEE Technical Excellence Award in Aerospace Controls,
+                    the Outstanding Aerospace Engineer Award from Purdue, the Sigma Xi President and Visitor’s
+                    Award for Excellence in Research, as well as numerous other fellowships and scholarships. He is
+                    currently the chief editor of the Frontiers in Robotics & AI, in the area of space robotics, and an
+                    associate editor for the Dynamic Games and Applications journal. In the past, he has served as an
+                    associate editor for the IEEE Transactions on Automatic Control, the AIAA Journal of Guidance,
+                    Control, and Dynamics, the IEEE Control Systems Magazine, and the Journal of Dynamical and
+                    Control Systems. He is a Fellow of the AIAA, IEEE, and AAS.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="schedule">Schedule</h2>
+        <div class="schedule-container">
+            <h3 class="schedule-category">Morning Session I: Stochastic Model Predictive and Data Driven Control</h3>
+            <!-- Item 1: Simple item without toggles -->
+            <div class="schedule-item item-green">
+                <div class="time-details">
+                    <p class="time">8:30am - 8:40am</p>
+                    <span class="duration">10 min</span>
+                    <div class="organizers-pills">
+                        <span style="background-color: #e5e7eb; color: #374151;">Organizers</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Workshop Opening Remarks</h3>
+                    </div>
+                    <div class="toggle-controls">
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">8:40am - 9:15am</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Francesco Borrelli</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coming Soon!</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content1">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content1" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 3: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">9:15am - 9:50am</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Florian Dörfler</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Gaussian Behaviors: Representations and Data-Driven Control</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content2">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content2" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 4: Item with mixed controls -->
+            <div class="schedule-item item-yellow">
+                <div class="time-details">
+                    <p class="time">9:50am - 10:00am</p>
+                    <span class="duration">10 min</span>
+                    <div class="organizers-pills">
+                        <span>Ph.D Students</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Ph.D. Lightning Round 1 </h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content3">
+                            <span>Speakers</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content3" class="content-container">
+                        <h4>Ph.D. Student 1: Topic</h4>
+                        <p style="margin-bottom: 20px;">Coming Soon!</p>
+                        <h4>Ph.D. Student 2: Topic</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 5: Simple item without toggles -->
+            <div class="schedule-item item-green">
+                <div class="time-details">
+                    <p class="time">10:00am - 10:30am</p>
+                    <span class="duration">15 min</span>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coffee Break</h3>
+                    </div>
+
+                </div>
+            </div>
+            <h3 class="schedule-category">Morning Session II: Distributional Control</h3>
+            <!-- Item 2: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">10:30am - 11:05am</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Tryphon T. Georgiou</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Schrödinger Bridges: Old and New</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content4">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content4" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>In 1931 Erwin Schrödinger published a paper with the title "Über die Umkehrung der Naturgesetze" (On the Reversal of the Laws 
+                            of Nature), where he explored the time reversal of the law of a diffusion process and its implications when conditioning the 
+                            law to satisfy specified marginals at two points in time. The law of the conditioned process, with time-marginals that 
+                            interpolate the specified end-point marginals, came to be known as a Schrödinger bridge. Schrödinger's ideas linked a rather 
+                            broad spectrum of concepts that, in modern language, include the relative entropy between probability laws, likelihood 
+                            estimation, large deviations theory, stochastic optimization and Monge-Kantorovich optimal mass transport. The aim of the 
+                            presentation is to overview the mathematics and applications of SBs in control theory and related fields.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 6: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">11:05am - 11:40am</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Panagiotis Tsiotras</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coming Soon!</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content5">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content5" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 7: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">11:40am - 12:15pm</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Giancarlo Ferrari-Trecate</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Data-driven distributionally robust LQ control</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content6">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content6" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+                        <!-- Item 1: Simple item without toggles -->
+            <div class="schedule-item item-green">
+                <div class="time-details">
+                    <p class="time">12:15pm - 2:00pm</p>
+                    <span class="duration">1 hr 45 min</span>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Lunch Break</h3>
+                        <p> Lunch Options:</p>
+                        <div class="toggle-controls">
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Option 1</a>
+                        <a href="#" class="link-btn">Option 2</a>
+                        <a href="#" class="link-btn">Option 3</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        <h3 class="schedule-category">Afternoon Session I: Stochastic Safety and Probabilistic Guarantees</h3>
+
+            <!-- Item 8: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">2:00pm - 2:35pm</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Alessandro Abate</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coming Soon!</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content7">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content7" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 9: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">2:35pm - 3:10pm</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Yongxin Chen</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Safety Assurance of Stochastic Systems</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content8">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content8" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Safety is a critical requirement for real-world systems, including autonomous 
+                            vehicles, robots, power grids and more. Over the past decades, many methods have been 
+                            developed for safety verification and safe control design in deterministic systems. However, 
+                            real-world applications often involve not only worst-case deterministic disturbances but also 
+                            stochastic uncertainties, rendering deterministic methods insufficient. In this talk, I will 
+                            present an effective framework that address this challenge by decoupling the effects of 
+                            stochastic and deterministic disturbances. At the heart of this framework is a novel technique 
+                            that provides probabilistic bounds on the deviation between the trajectories of stochastic systems 
+                            and their deterministic counterparts with high confidence. This approach yields a tight probabilistic 
+                            bound that is applicable to both continuous-time and discrete-time systems. By leveraging this bound, 
+                            the safety verification problem for stochastic systems can be reduced to a deterministic one, enabling
+                            the use of existing deterministic methods to solve problems involving stochastic uncertainties. I will 
+                            demonstrate the effectiveness of this framework through several safety verification and safe control 
+                            tasks. </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 10: Item with mixed controls -->
+            <div class="schedule-item item-yellow">
+                <div class="time-details">
+                    <p class="time">3:10pm - 3:30pm</p>
+                    <span class="duration">20 min</span>
+                    <div class="organizers-pills">
+                        <span>Ph.D Students</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Ph.D. Lightning Round 2 </h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content9">
+                            <span>Speakers</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content9" class="content-container">
+                        <h4>Ph.D. Student 1: Topic</h4>
+                        <p style="margin-bottom: 20px;">Coming Soon!</p>
+                        <h4>Ph.D. Student 2: Topic</h4>
+                        <p style="margin-bottom: 20px;">Coming Soon!</p>
+                        <h4>Ph.D. Student 3: Topic</h4>
+                        <p style="margin-bottom: 20px;">Coming Soon!</p>
+                        <h4>Ph.D. Student 4: Topic</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 11: Simple item without toggles -->
+            <div class="schedule-item item-green">
+                <div class="time-details">
+                    <p class="time">3:30pm - 4:00pm</p>
+                    <span class="duration">30 min</span>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coffee Break</h3>
+                    </div>
+                </div>
+            </div>
+
+        <h3 class="schedule-category">Afternoon Session II: Applications in Aerospace</h3>
+
+            <!-- Item 12: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">4:00pm - 4:35pm</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Behçet Açıkmeşe</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coming Soon!</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content10">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content10" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 13: Item with mixed controls -->
+            <div class="schedule-item item-blue">
+                <div class="time-details">
+                    <p class="time">4:35pm - 5:10pm</p>
+                    <span class="duration">35 min</span>
+                    <div class="organizers-pills">
+                        <span>Kenshiro Oguri</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Coming Soon!</h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content11">
+                            <span>Abstract</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                        <!-- Demo Link Button -->
+                        <a href="#" class="link-btn">Demo</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content11" class="content-container">
+                        <h4>Abstract</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 14: Item with mixed controls -->
+            <div class="schedule-item item-yellow">
+                <div class="time-details">
+                    <p class="time">5:10pm - 5:20pm</p>
+                    <span class="duration">10 min</span>
+                    <div class="organizers-pills">
+                        <span>Ph.D Students</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Ph.D. Lightning Round 2 </h3>
+                    </div>
+
+                    <div class="toggle-controls">
+                        <!-- Abstract Toggle -->
+                        <button class="toggle-btn" data-target="abstract-content12">
+                            <span>Speakers</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                    </div>
+
+                    <!-- Abstract Content -->
+                    <div id="abstract-content12" class="content-container">
+                        <h4>Ph.D. Student 1: Topic</h4>
+                        <p style="margin-bottom: 20px;">Coming Soon!</p>
+                        <h4>Ph.D. Student 2: Topic</h4>
+                        <p>Coming Soon!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 15: Simple item without toggles -->
+            <div class="schedule-item item-green">
+                <div class="time-details">
+                    <p class="time">5:20pm - 5:30pm</p>
+                    <span class="duration">10 min</span>
+                    <div class="organizers-pills">
+                        <span style="background-color: #e5e7eb; color: #374151;">Organizers</span>
+                    </div>
+                </div>
+                <div class="workshop-content">
+                    <div class="workshop-header">
+                        <h3>Closing Remarks</h3>
+                    </div>
+                    <div class="toggle-controls">
+                        <!-- Slides Link Button -->
+                        <a href="#" class="link-btn">Slides</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+        <!-- Organizers Section -->
+        <h2 class="section-title" id="organizers">Organizers</h2>
+        <div class="person-list">
+             <div class="person-list-item">
+                <!-- Organizer 1 -->
+                <div class="person-header">
+                    <img src="images/vignesh_headshot.jpg" alt="Photo of Organizer">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Vignesh Sivaramakrishnan</h3>
+                        </div>
+                        <p class="affiliation">National Academies, NRC, Air Force Research Laboratory</p>
+                        <div class="inline-links">
+                            <a href="https://vigsiv.com" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                     <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Vignesh Sivaramakrishnan is a Postdoctoral Fellow at the Air Force Research Laboratory
+                    through the Air Force Science & Technology Fellowship Program administered by the National
+                    Academy of Sciences, National Research Council (NRC). He currently conducts fundamental research on
+                    advanced control/planning and uncertainty quantification algorithms with applications to
+                    aerospace systems. He received his B.S. in Mechanical Engineering in 2017 from the University of
+                    Utah and his Ph.D. in Electrical and Computer Engineering in 2024 from the University of New
+                    Mexico. He has been a visiting graduate researcher at the Air Force Research Laboratory in 2018 as
+                    well as a summer intern at the Jet Propulsion Laboratory in 2015, on Project Starshade, and 2016,
+                    on InSight. His research interests include stochastic optimal control/planning and uncertainty
+                    quantification, with applications to real-world systems.</p>
+                </div>
+            </div>
+            <!-- Organizer 2 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/josh_headshot.jpg" alt="Photo of Organizer">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Joshua Pilipovsky</h3>
+                        </div>
+                        <p class="affiliation">Raytheon Technologies Research Center (RTRC)</p>
+                        <div class="inline-links">
+                            <!-- <a href="#" class="link-btn">Website</a> -->
+                        </div>
+                    </div>
+                     <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Joshua Pilipovsky is a Senior Research Engineer at Raytheon Technologies Research Center.
+                    He received the B.S., M.S., and Ph.D. degrees in Aerospace Engineering from the Georgia Institute
+                    of Technology in 2019, 2021, and 2025, respectively. He has held Guidance, Navigation, and Control
+                    (GN&C) and software engineering positions with Raytheon Technologies from 2021-2024. His current
+                    research interests lie broadly at the intersection of control theory, optimization, and learning, with
+                    topics including stochastic optimal control, distributionally robust control, data-driven control and
+                    uncertainty quantification, with applications to aerial and space vehicle autonomy.</p>
+                </div>
+            </div>
+            <!-- Organizer 3 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/alex_headshot.jpeg" alt="Photo of Organizer">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Alex Soderlund</h3>
+                        </div>
+                        <p class="affiliation">Air Force Research Laboratory</p>
+                        <div class="inline-links">
+                            <!-- <a href="#" class="link-btn">Website</a> -->
+                        </div>
+                    </div>
+                     <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Alexander Soderlund is a research aerospace engineer at the Space Vehicles Directorate at
+                    Kirtland Air Force Base. He graduated in 2020 from The Ohio State University with a Ph.D. in
+                    Aerospace Engineering under the advisement of Dr. Mrinal Kumar. He then worked as a National
+                    Research Council postdoctoral research fellow for AFRL developing autonomous rendezvous and
+                    docking algorithms until assuming a civilian researcher role in late 2022 within the space control
+                    branch. His work largely focuses on enabling local onboard autonomy for satellites in the hazardous
+                    space domain. Research areas include multi-agent coordination, autonomous decision-making,
+                    assurance of safety while maneuvering, and enabling shared tactical awareness for distributed system
+                    elements (e.g., ground systems, space force operators, and satellites).</p>
+                </div>
+            </div>
+            <!-- Organizer 4 -->
+            <div class="person-list-item">
+                <div class="person-header">
+                    <img src="images/sean_headshot.png" alt="Photo of Organizer">
+                    <div class="person-header-text">
+                        <div class="person-name-line">
+                            <h3 class="name">Sean Phillips</h3>
+                        </div>
+                        <p class="affiliation">Air Force Research Laboratory</p>
+                        <div class="inline-links">
+                            <a href="https://seanaphillipscom.wordpress.com" class="link-btn">Website</a>
+                        </div>
+                    </div>
+                     <div class="bio-toggle">
+                        <span>Bio</span>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="person-bio-content">
+                    <h4>Biography</h4>
+                    <p class="bio">Sean Phillips is a Senior Mechanical Engineer and Technology Advisor of the Space Control
+                        Branch at the Air Force Research Laboratory. He holds the title of Research Assistant Professor
+                        (LAT) at the University of New Mexico in Albuquerque, NM. He received his Ph.D in the Department
+                        of Computer Engineering at the University of California – Santa Cruz in 2018. He received his
+                        B.S. in Mechanical Engineering from the University of Arizona in 2011 and his M.S. in Mechanical
+                        Engineering from the same university specializing in Dynamics and Controls in 2013. In 2009, he
+                        joined the Hybrid Dynamics and Controls Lab where he received a NASA Space Grant in 2010. In
+                        2010, he received an Undergraduate Research Grant from the University of Arizona Honors College.
+                        He received a Space Scholars Internship at the Air Force Research Laboratory in Albuquerque NM
+                        during the summers of 2011, 2012 and 2017. In 2014, he joined the Hybrid Systems Laboratory
+                        at the University of California, Santa Cruz. In 2017, he received the Jack Baskin and Peggy
+                        Downes-Baskin Fellowship for his research on autonomous networked systems from the Baskin
+                        School of Engineering at the University of California Santa Cruz.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Outreach Section -->
+        <div class="text-section" id="outreach">
+            <h2 class="section-title" style="margin-top: 40px;">Outreach</h2>
+<p>Our goal is to promote the dissemination of ideas between researchers from both academia and industry, representing institutions from different geographical regions including North America and Europe. In doing so, our outcomes are twofold. First, we wish to aid practitioners in realizing tools from academia by providing practical examples—especially in aerospace—to motivate fundamental research in academia. In addition, we believe that when tools from a field are accessible to researchers, the field as a whole is enriched. Therefore, as mentioned in the objectives and expected outcomes, we, the organizers, have taken on the responsibility of providing attendees with a Python package that implements the approaches the speakers will present. Our hope is that such a package lowers the barrier to entry and promotes greater involvement by allowing individuals to interact directly with the approaches, while also fostering opportunities to ask theoretical questions. Last but not least, the spotlight sessions are specifically designed to provide opportunities for Ph.D. students and postdoctoral fellows to present their work. Doing so allows them to engage with established experts in the field and obtain crucial feedback from the speakers as well as attendees at large. We believe that having new and early career researchers present will nurture the next generation of researchers in stochastic planning and control.</p>
+        </div>
+
+        <!-- Code Section -->
+        <div class="text-section" id="code">
+            <h2 class="section-title" style="margin-top: 40px;">Code</h2>
+        <p>To incentivize use and improve accessibility of approaches speakers
+        will present, the workshop organizers will undertake the entire effort to implement/centralize the
+        presented approaches as a Python package and interactive demos in the schedule. We believe that making such a package available enables
+        wider adaption of the presented approaches with researchers who are new and/or unfamiliar to the
+        field.</p>
+        <p style="font-weight: bold; text-align: center;"> More details coming soon!</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generic toggle logic for abstracts
+            const toggleButtons = document.querySelectorAll('.toggle-btn');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = button.dataset.target;
+                    const contentContainer = document.getElementById(targetId);
+                    if (contentContainer) {
+                        contentContainer.classList.toggle('is-open');
+                        button.classList.toggle('is-active');
+                    }
+                });
+            });
+
+            // Accordion logic for updates
+            const updateHeaders = document.querySelectorAll('.update-header');
+            updateHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const currentItem = header.parentElement;
+                    const isOpen = currentItem.classList.contains('is-open');
+                    document.querySelectorAll('.update-item').forEach(item => item.classList.remove('is-open'));
+                    if (!isOpen) {
+                        currentItem.classList.add('is-open');
+                    }
+                });
+            });
+
+            // Accordion logic for person bios
+            const personHeaders = document.querySelectorAll('.person-header');
+            personHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const currentItem = header.closest('.person-list-item');
+                    currentItem.classList.toggle('is-open');
+                });
+            });
+
+            // Prevent bio toggle when clicking inline links
+            const inlineLinks = document.querySelectorAll('.inline-links a');
+            inlineLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
